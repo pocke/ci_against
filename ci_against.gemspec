@@ -13,6 +13,8 @@ Gem::Specification.new do |spec|
   spec.description   = %q{}
   spec.homepage      = "https://github.com/pocke/ci_against"
 
+  spec.required_ruby_version = '>= 2.4.0'
+
   if spec.respond_to?(:metadata)
     spec.metadata["homepage_uri"] = spec.homepage
     # spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
