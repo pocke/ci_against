@@ -34,6 +34,7 @@ module CIAgainst
       rvm = find_rvm(yml.tree)
       case rvm
       when Psych::Nodes::Sequence
+        return unless rvm.style == Psych::Nodes::Sequence::BLOCK
         rvm.children.each do |child|
           update_to_latest_ruby(child) if child.is_a?(Psych::Nodes::Scalar)
         end
@@ -58,6 +59,7 @@ module CIAgainst
       rvm = find_rvm(yml.tree)
       case rvm
       when Psych::Nodes::Sequence
+        return unless rvm.style == Psych::Nodes::Sequence::BLOCK
         biggest_version_node = rvm
           .children
           .select{|node| node.is_a?(Psych::Nodes::Scalar) && node.value.match?(VERSION_REGEXP)}
@@ -90,6 +92,7 @@ module CIAgainst
       end
       return nil
     end
+
 
     def minor_version(version)
       version.split('.')[0..1].join('.')

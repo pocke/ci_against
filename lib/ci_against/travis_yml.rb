@@ -4,14 +4,14 @@ module CIAgainst
       @nleol = yaml_string[-1] == "\n"
       @tree = parse(yaml_string)
       @lines = yaml_string.lines(chomp: true)
-      @line_offest = @lines.map{0}
+      @line_offest = @lines.map{0} << 0
     end
 
     attr_reader :tree, :lines
 
     def insert_line(line, lineno)
       offset = @line_offest[0..lineno].sum
-      @lines = [*lines[0...(lineno+offset)], line, *lines[(lineno+offset)..]]
+      @lines = [*lines[0...(lineno+offset)], line, *lines[(lineno+offset)..-1]]
       @line_offest[lineno] += 1
     end
 
