@@ -81,6 +81,13 @@ $ ci_against your_github_name/your_repo_name
 PR created: https://github.com/your_github_name/your_repo_name/pull/42
 ```
 
+## FAQ
+
+### Q. CI Against suggests not latest Ruby version.
+
+Please open a pull request to update Ruby version list!
+https://github.com/pocke/ci_against/blob/master/lib/ci_against/converter.rb
+
 
 ## Development
 
