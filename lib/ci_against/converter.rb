@@ -10,8 +10,14 @@ module CIAgainst
     ]
     VERSION_REGEXP = /\d+\.\d+\.\d+/
 
+    attr_reader :log
+
     def initialize(yml_string)
       @yml = TravisYML.new(yml_string)
+      @log = {
+        changed: [],
+        added: [],
+      }
     end
 
     def convert
@@ -45,6 +51,7 @@ module CIAgainst
       return unless scalar.start_line == scalar.end_line
 
       yml.replace_line(yml.lines[scalar.start_line].sub(version, latest_version), scalar.start_line)
+      log[:changed] << {from: version, to: latest_version}
     end
 
     def insert_new_rubies
@@ -64,6 +71,7 @@ module CIAgainst
           .reverse
           .each do |v|
             yml.insert_line(line_base.sub(VERSION_REGEXP, v), biggest_version_node.start_line + 1)
+            log[:added] << v
           end
       else
         # Do nothing, because if other than sequence is specified as rvm, it cannot insert new version.

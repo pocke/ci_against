@@ -17,16 +17,17 @@ module CIAgainst
         log ".ruby-version exists in #{@repo}. So skipped." 
         return
       end
-      new_content = Converter.new(content).convert
+      converter = Converter.new(content)
+      new_content = converter.convert
       if new_content == content
         log "No difference. Skipped"
         return
       end
 
       if dry_run
-        display_diff(content, new_content)
+        display_diff(content, new_content, log: converter.log)
       else
-        create_pull_request(new_content)
+        create_pull_request(new_content, log: converter.log)
       end
     end
 
@@ -34,7 +35,10 @@ module CIAgainst
 
     attr_reader :octokit
 
-    def display_diff(content, new_content)
+    def display_diff(content, new_content, log:)
+      puts title(log)
+      puts
+      puts description(log)
       # TODO: Do not use git-diff
       Tempfile.open('ci-against') do |f1|
         Tempfile.open('ci-against') do |f2|
@@ -47,7 +51,7 @@ module CIAgainst
       end
     end
 
-    def create_pull_request(new_content)
+    def create_pull_request(new_content, log:)
       repo = octokit.repository(@repo)
       base_branch = octokit.branch(@repo, repo.default_branch)
 
@@ -58,13 +62,44 @@ module CIAgainst
         type: 'blob',
         sha: blob,
       }], base_tree: base_branch.commit.commit.tree.sha)
-      commit = octokit.create_commit(@repo, "CI against", tree.sha, base_branch.commit.sha)
+      commit = octokit.create_commit(@repo, title(log) + "\n\n" + description(log), tree.sha, base_branch.commit.sha)
 
       head_branch_name = "ci-against-#{SecureRandom.hex(6)}"
       octokit.create_ref(@repo, "refs/heads/#{head_branch_name}", commit.sha)
 
-      pr = octokit.create_pull_request(@repo, base_branch.name, head_branch_name, "CI against new Ruby")
+      pr = octokit.create_pull_request(@repo, base_branch.name, head_branch_name, title(log), description(log))
       log "PR created: #{pr.html_url}"
+    end
+
+    def title(log)
+      if log[:added].empty?
+        ruby = log[:changed].size == 1 ? 'Ruby' : 'Rubies'
+        "CI against new #{ruby}"
+      else
+        "CI against Ruby #{log[:added].join(" and ")}"
+      end
+    end
+
+    def description(log)
+      res = +''
+      unless log[:added].empty?
+        res << <<~END
+          ## Added
+
+          #{log[:added].map{|x| "* #{x}"}.join("\n")}
+        END
+      end
+
+      unless log[:changed].empty?
+        res << <<~END
+
+
+          ## Changed
+
+          #{log[:changed].map{|x| "* #{x[:from]} => #{x[:to]}"}.join("\n")}
+        END
+      end
+      res
     end
 
     def exist_file?(path)
