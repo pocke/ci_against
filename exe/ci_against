@@ -1,0 +1,4 @@
+#!ruby
+
+require 'ci_against'
+exit CIAgainst::CLI.new(ARGV).run
