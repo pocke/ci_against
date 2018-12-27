@@ -9,6 +9,8 @@ rvm:
 
 cache: bundler
 
+before_script: gem install bundler
+
 matrix:
   allow_failures:
     - rvm: ruby-head
