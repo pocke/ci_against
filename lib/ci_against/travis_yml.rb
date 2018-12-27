@@ -11,7 +11,7 @@ module CIAgainst
 
     def insert_line(line, lineno)
       offset = @line_offest[0..lineno].sum
-      @lines = [*lines[0...(lineno+offset)], line, *lines[(lineno+offset)..]]
+      @lines = [*lines[0...(lineno+offset)], line, *lines[(lineno+offset)..-1]]
       @line_offest[lineno] += 1
     end
 
