@@ -2,6 +2,7 @@ require 'optparse'
 require 'psych'
 require 'octokit'
 require 'tempfile'
+require 'securerandom'
 
 require "ci_against/version"
 require 'ci_against/converter'

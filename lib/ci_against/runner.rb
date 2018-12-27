@@ -45,7 +45,23 @@ module CIAgainst
     end
 
     def create_pull_request(new_content)
-      octokit.create_blob(@repo, new_content)
+      repo = octokit.repository(@repo)
+      base_branch = octokit.branch(@repo, repo.default_branch)
+
+      blob = octokit.create_blob(@repo, new_content)
+      tree = octokit.create_tree(@repo, [{
+        path: '.travis.yml',
+        mode: '100644',
+        type: 'blob',
+        sha: blob,
+      }], base_tree: base_branch.commit.commit.tree.sha)
+      commit = octokit.create_commit(@repo, "CI against", tree.sha, base_branch.commit.sha)
+
+      head_branch_name = "ci-against-#{SecureRandom.hex(6)}"
+      octokit.create_ref(@repo, "refs/heads/#{head_branch_name}", commit.sha)
+
+      pr = octokit.create_pull_request(@repo, base_branch.name, head_branch_name, "CI against new Ruby")
+      log "PR created: #{pr.html_url}"
     end
 
     def exist_file?(path)
