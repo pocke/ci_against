@@ -12,7 +12,7 @@ module CIAgainst
         raise NotImplementedError
       else
         @args.each do |repo|
-          Runner.new(repo).run(dry_run: @params[:'dry-run'])
+          Runner.new(repo, github_access_token: ENV.fetch('GITHUB_ACCESS_TOKEN')).run(dry_run: @params[:'dry-run'])
         end
       end
       return 0

@@ -1,8 +1,9 @@
 module CIAgainst
   class Runner
     # repo: owner/repo
-    def initialize(repo)
+    def initialize(repo, github_access_token:)
       @repo = repo
+      @octokit = Octokit::Client.new(access_token: github_access_token)
     end
 
     def run(dry_run:)
@@ -30,6 +31,8 @@ module CIAgainst
     end
 
     private
+
+    attr_reader :octokit
 
     def display_diff(content, new_content)
       # TODO: Do not use git-diff
@@ -69,10 +72,6 @@ module CIAgainst
       true
     rescue Octokit::NotFound
       false
-    end
-
-    def octokit
-      @octokit ||= Octokit::Client.new(access_token: ENV.fetch('GITHUB_ACCESS_TOKEN'))
     end
 
     # TODO: use logger
