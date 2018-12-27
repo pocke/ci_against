@@ -67,7 +67,7 @@ module CIAgainst
       head_branch_name = "ci-against-#{SecureRandom.hex(6)}"
       octokit.create_ref(@repo, "refs/heads/#{head_branch_name}", commit.sha)
 
-      pr = octokit.create_pull_request(@repo, base_branch.name, head_branch_name, title(log), description(log))
+      pr = octokit.create_pull_request(@repo, base_branch.name, head_branch_name, title(log), description(log) + "\n----\n\n<sub>Opend by [CI Against](https://github.com/pocke/ci_against)</sub>")
       log "PR created: #{pr.html_url}"
     end
 
