@@ -9,9 +9,9 @@ class TestConverter < Minitest::Test
     YAML
     assert_equal <<~YAML, result
       rvm:
-        - 2.4.6
-        - 2.5.5
-        - 2.6.3
+        - 2.4.9
+        - 2.5.7
+        - 2.6.5
     YAML
   end
 
@@ -23,9 +23,9 @@ class TestConverter < Minitest::Test
     YAML
     assert_equal <<~YAML, result
       rvm:
-        - 2.4.6
-        - 2.5.5
-        - 2.6.3
+        - 2.4.9
+        - 2.5.7
+        - 2.6.5
     YAML
   end
 
@@ -40,9 +40,9 @@ class TestConverter < Minitest::Test
     assert_equal <<~YAML, result
       language: ruby
       rvm:
-        - 2.4.6
-        - 2.5.5
-        - 2.6.3
+        - 2.4.9
+        - 2.5.7
+        - 2.6.5
       script: bundle exec rake test
     YAML
   end
@@ -71,9 +71,9 @@ class TestConverter < Minitest::Test
     YAML
     assert_equal <<~YAML, result
       rvm:
-        - 2.4.6
-        - 2.5.5
-        - 2.6.3
+        - 2.4.9
+        - 2.5.7
+        - 2.6.5
         - ruby-head
     YAML
   end
@@ -86,9 +86,9 @@ class TestConverter < Minitest::Test
     YAML
     assert_equal <<~YAML, result
       rvm:
-        - '2.4.6'
-        - '2.5.5'
-        - '2.6.3'
+        - '2.4.9'
+        - '2.5.7'
+        - '2.6.5'
     YAML
   end
 
@@ -98,7 +98,7 @@ class TestConverter < Minitest::Test
       rvm: ['2.4.4', '2.5.0']
     YAML
     assert_equal <<~YAML, result
-      rvm: ['2.4.6', '2.5.5', '2.6.3']
+      rvm: ['2.4.9', '2.5.7', '2.6.5']
     YAML
   end
 

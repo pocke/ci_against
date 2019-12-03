@@ -1,9 +1,9 @@
 module CIAgainst
   class Converter
     LATEST_RUBIES = %w[
-      2.6.3
-      2.5.5
-      2.4.6
+      2.6.5
+      2.5.7
+      2.4.9
       2.3.8
       2.2.10
       2.1.10
